@@ -1,0 +1,27 @@
+{% extends "admin_base.html" %}
+{% block title %}Pairwise Video Comparisons: admin application{% endblock %}
+{% block content %}
+<p><a href="/pwva">&lt; Return to admin home screen</a></p>
+<h1>Pairwise Video Comparisons: generate a test comparison</h1>
+
+{% if rounds.count() %}
+<h2>Select a round</h2>
+<table>
+<tr><th>Round name</th><th>File list</th><th></th></tr>
+{% for r in rounds %}
+<tr><td>{{ r.name }}</td><td>{{ r.get_file_list_text() }}</td><td>
+{% if r.file_list %}
+<button id="{{ r.key.id() }}" class="selectRound">Select</button>
+{% else %}
+<button id="{{ r.key.id() }}" class="selectRound" disabled="true">Select</button>
+{% endif %}
+</td></tr>
+{% endfor %}
+</table>
+{% else %}
+You need to add a round and upload a file list to it before you can create a test comparison.
+{% endif %}
+
+<div id="result"></div>
+{% endblock %}
+{% block scripts %}<script src="/pwv/pwv_test_comp.js"></script>{% endblock %}

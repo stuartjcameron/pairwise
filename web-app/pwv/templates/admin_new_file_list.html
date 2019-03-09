@@ -1,0 +1,13 @@
+{% extends "admin_base.html" %}
+{% block title %}Pairwise Video Comparisons: admin application{% endblock %}
+{% block content %}
+<p><a href="/pwva">&lt; Return to admin home screen</a></p>
+<h1>Pairwise comparisons: new file list</h1>
+<div><label for="descriptionInput">Description (name)</label> <input type="text" id="descriptionInput" /></div>
+<div><input type="radio" name="filetype" id="filetypeVideo" /><label for="filetypeVideo">Video</label>
+<input type="radio" name="filetype" id="filetypeDocument" /><label for="filetypeDocument">Document</label>
+<input type="radio" name="filetype" id="filetypeOther" /><label for="filetypeOther">Other</label></div>
+<div><label for="contentInput">File list (separate files with new line, semi-colon or comma)</label><br /><textarea rows="20" cols="100" id="contentInput"></textarea></div>
+<div class="panel"><button id="submit">Submit</button></div>
+{% endblock %}
+{% block scripts %}<script src="/pwv/pwv_new_file_list.js"></script>{% endblock %}

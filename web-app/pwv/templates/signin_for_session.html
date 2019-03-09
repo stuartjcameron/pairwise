@@ -1,0 +1,9 @@
+{% extends "admin_base.html" %}
+{% block title %}Pairwise Video Comparisons{% endblock %}
+{% block content %}
+<h1>Pairwise Video Comparisons</h1>
+<p>You are signed in to Google Accounts as {{ user.nickname }}. 
+However you do not have access to the pairwise application.</p>
+<div><a href="{{ change_user }}">Sign in as a different user</a></div>
+{% endblock %}
+ 

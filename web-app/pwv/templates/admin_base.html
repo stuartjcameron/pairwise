@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html><head><title>{% block title %}{% endblock %}</title>
+<link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+<body><div id="output-container">
+{% block content %}{% endblock %}
+</div>
+<div id="controls">Signed in as {{ user.nickname }} | <a href="{{ change_user }}">Change</a></div>
+<script src="/pwv/library.js"></script>
+<script src="/pwv/pwv_common.js"></script>
+{% if to_client %}
+<script>var fromServer = {{ to_client | tojson }}</script>
+{% endif %}
+{% block scripts %}{% endblock %}
+</body></html>

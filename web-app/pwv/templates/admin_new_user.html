@@ -1,0 +1,15 @@
+{% extends "admin_base.html" %}
+{% block title %}Pairwise Video Comparisons: admin application{% endblock %}
+{% block content %}
+<h1>Pairwise Video Comparisons: new user</h1>
+<h2>User information</h2>
+<table>
+<tr><td>Name</td><td><input type="text" id="userName"></td></tr>
+<tr><td>Email address</td><td><input type="text" id="emailAddress"></td></tr>
+<tr><td>Admin</td><td><input type="checkbox" id="admin"></td></tr>
+</table>
+
+<button id="submit">Add user</button>
+<a href="/pwva">Cancel</a>
+{% endblock %}
+{% block scripts %}<script src="/pwv/pwv_new_user.js"></script>{% endblock %}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html><head><title>Pairwise Comparisons Pilot application</title>
+<link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+<body>
+<form id="choiceForm">
+<div class="left"><label for="chooseLeft">Left paper is better</label><input type="radio" name="pairChoice" value="left" id="chooseLeft" disabled /></div>
+<div class="right"><label for="chooseRight">Right paper is better</label><input type="radio" name="pairChoice" value="right" id="chooseRight" disabled /></div>
+<button type="button" disabled id="submitButton" >Next &gt;</button>
+</form>
+<div style="width: 100%; top:80px; position: absolute; bottom: 0; left: 0;">
+<div class="placeholder" id="leftPlaceholder">Loading PDF...</div>
+<div class="placeholder" id="rightPlaceholder">Loading PDF...</div>
+<object type="application/pdf" width="50%" height="100%" class="pdf" id="leftPdf" onLoad="loadedData();" ></object>
+<object type="application/pdf" width="50%" height="100%" class="pdf" id="rightPdf"></object>
+</div>
+{% if user.admin %}
+<div id="controls">Signed in as {{ user.nickname }} | <a href="{{ user.logout }}">Sign out</a> | <a href="/pairwise/output">Show results</a></div>
+{% else %}
+<div id="controls">Signed in as {{ user.nickname }} | <a href="{{ user.logout }}">Sign out</a> | <a href="/pairwise/output">Show results</a></div>
+{% endif %}
+
+<div id="resultsBox"><div class="content"></div><div class="close">[Hide results]</div>
+<script>var page = "comparison", compressed = {{ compressed }}, judge = {{ user.number }}, round = {{ round }}, admin = "{{ user.admin }}" == "True",
+	logoutOutput = "{{ user.logoutOutput }}", weights = {{ weights }};</script>
+<script src="/static/pairwise_common.js"></script>
+<script src="/static/pairwise.js"></script>
+
+</body></html>
