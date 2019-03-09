@@ -31,16 +31,16 @@ def show_message(text, icon, title=None):
         title = icon
     message.setWindowTitle(title)
     message.exec_()
-    
+
 def warn(message):
     show_message(message, "Warning")
-    
+
 def info(message):
     show_message(message, "Information")
 
-    
+
 def error_message(err):
-    """ Return a user-friendler message for different server issues """
+    """ Return a user-friendlier message for different server issues """
     if not hasattr(err, "response") or not hasattr(err.response, "status_code"):
         return "No response"
     s = err.response.status_code
@@ -53,9 +53,9 @@ def error_message(err):
     else:
         return "Unknown error"
 
-    
+
 def connection_error(response, err):
-    """ Default function to handle miscellaneous problems connecting to the 
+    """ Default function to handle miscellaneous problems connecting to the
     server.  """
     print("connection_error: response: ", response, type(response))
     print("connection_error: Error:", err)
@@ -68,17 +68,17 @@ def connection_error(response, err):
             warn("There was a problem contacting the server. Please check your connection and try again.")
         elif 500 <= s < 600:
             warn("There was a server error. Please contact the administrator.")
-    else:    
+    else:
         warn("""It was not possible to connect to the server. Please check your connection and try again.""")
-    #TODO: provide more detail on the response esp whether due to lack of 
+    #TODO: provide more detail on the response esp whether due to lack of
     # connection, server error, or non-authorisation.
     return Exception
-    
+
 def make_request(method, command, user, token, data=None, error_handler=connection_error):
     r = None
     try:
         if method == "POST":
-            r = requests.post(BASE_URL + "/" + command, 
+            r = requests.post(BASE_URL + "/" + command,
                       auth=(user, token),
                     json=data,
                     timeout=10)
@@ -88,14 +88,14 @@ def make_request(method, command, user, token, data=None, error_handler=connecti
                              params=data,
                              timeout=10)
         r.raise_for_status()
-        return r.json()       
+        return r.json()
     except (ConnectionError, HTTPError, Timeout) as e:
         return error_handler(r, e)
-        
-        
+
+
 def post(command, user, token, json=None, error_handler=connection_error):
-    return make_request("POST", command, user, token, data=json, error_handler=error_handler)  
-        
+    return make_request("POST", command, user, token, data=json, error_handler=error_handler)
+
 def get(command, user, token, params=None, error_handler=connection_error):
     return make_request("GET", command, user, token, data=params, error_handler=error_handler)
 
@@ -107,10 +107,10 @@ def sign_in():
     # so we need to wait at least 1s and request again if the account has
     # not yet been updated
     # Try 30 times before giving up
-    
+
     for _ in range(29):
         time.sleep(1)
-        response = get('start_session', 'desktop-app', token, 
+        response = get('start_session', 'desktop-app', token,
                        error_handler=sign_in_problem)
         if response:
             break
@@ -123,9 +123,9 @@ def sign_in():
         print("sign_in: Signed in")
         return response["email"], response["token"]
     # ideally this first test session would fetch the user name?
-    # could it deliver both a user name and server-created password to be 
+    # could it deliver both a user name and server-created password to be
     # stored in the app??
-    
+
     # TODO: need to handle timeout better.
     # Sign the user out again and show a message to try again.
     #request.get(base_url + "/test_session?session_key=" + key)
@@ -139,4 +139,3 @@ def sign_in_problem(r, e):
     else:
         print("sign_in_problem: Some other problem...", r, getattr(r, "status_code", None))
         return connection_error(r, e)
-

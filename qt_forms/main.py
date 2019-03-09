@@ -97,23 +97,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-    def retranslateUi(self, MainWindow):
-        #TODO: implement translation properly
-        # for now, I implement my own translation function
-        #def _translate(context, message):
-        #    if message in translations:
-        #        return translations[message][self.language]
-        #    else:
-        #        return message
-        
-        #translations = {
-        #                "Play left video": {'PT': 'Assista ao vídeo esquerdo'},
-        #                "Play right video": {'PT': 'Assista ao vídeo direito.'},
-        #                "Select left video": {'PT': 'Escolha o vídeo esquerdo'},
-        #                "Select right video": {'PT': 'Escolha o vídeo direito'},
-        #                "Submit judgement": {'PT':  'Envia escolha'}}
-        #self.language = "PT"
-        
+    def retranslateUi(self, MainWindow):    
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Pairwise comparisons"))
         self.play_left.setText(_translate("MainWindow", "Play left video"))
@@ -131,4 +115,3 @@ class Ui_MainWindow(object):
         self.actionChange_round.setText(_translate("MainWindow", "Change round..."))
         self.actionPreferences.setText(_translate("MainWindow", "Preferences..."))
         self.actionView_output.setText(_translate("MainWindow", "View output"))
-
