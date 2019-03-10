@@ -69,7 +69,9 @@ A web application for administration of Pairwise comparisons. It allows
 admins to list and output the comparisons that have been made, set weights and other
 parameters determining the likelihood of two files being viewed together,
 create comparison sessions, and add or remove users from sessions. It also
-allows users to upload lists of file names using the uploader desktop tool (see above).
+allows users to upload lists of file names using the uploader desktop tool (see above). Finally,
+the main pairwise comparisons app (**pwv_main.py**, see above) uploads the comparison information
+to this app which stores it in a database.
 
 The app runs on Google App Engine (a Google Cloud service) and can currently be found
 at http://www.education-metrics.appspot.com/pwva (accessible only to users signed in
