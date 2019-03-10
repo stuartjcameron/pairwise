@@ -18,9 +18,9 @@ print("SYS.ARGV", sys.argv)
 TIMEOUT = 10        # seems long but sometimes takes this long using local server
 
 if len(sys.argv) == 2 and sys.argv[1] == "-l":
-    BASE_URL = "http://localhost:8080/pwva"
+    BASE_URL = "http://localhost:8080/pairwise"
 else:
-    BASE_URL = "http://education-metrics.appspot.com/pwva"
+    BASE_URL = "http://education-metrics.appspot.com/pairwise"
 
 def show_message(text, icon, title=None):
     message = QMessageBox()
