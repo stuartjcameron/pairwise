@@ -65,4 +65,26 @@ Python 3-compatible.
 
 ## web-app
 
-A web application for Google App Engine (a Google Cloud service).
+A web application for administration of Pairwise comparisons. It allows
+admins to list and output the comparisons that have been made, set weights and other
+parameters determining the likelihood of two files being viewed together,
+create comparison sessions, and add or remove users from sessions. It also
+allows users to upload lists of file names using the uploader desktop tool (see above).
+
+Google App Engine (a Google Cloud service). In the root
+directory, app.yaml, appengine_config.py and index.yaml are all standard GAE
+files. app.yaml tells it where to route each URL.
+
+The entire server-side logic for the web app is contained in one long file
+web-app/pairwise/main.py. This includes database entity classes, functions returning
+the appropriate responses for each URL, and a few general utility functions.
+
+The app uses flask templates to return web pages. The templates are stored in
+web-app/pairwise/templates. admin_base.html is the basic template which the others
+are all based on.
+
+The webpages rely on a series of JS files stored in web-app/pairwise/static.
+These are written in vanilla JS with a simple library of commands stored in
+web-app/static/library.jss
+
+There is a single stylesheet for the entire app - web-app/style.css

@@ -1,0 +1,32 @@
+{% extends "admin_base.html" %}
+{% block title %}Pairwise Comparisons: admin application{% endblock %}
+{% block content %}
+<!--  <p><a href="/pairwise/round/{{ round_.id }}">&lt; Return to round page</a></p -->
+<h1>Pairwise Comparisons: {{ weight.name }}</h1>
+<p>Created {{ weight.created }} for round {{ round_.name }}</p>
+
+<table>
+<tr><td colspan="2"><label for="weightName">Name: </label><input type="text" id="weightName" class="name-input" value="{{ weight.name }}" /></td></tr>
+<tr><td>Weight</td><td><input id="weightWeight" class="number-input-4" type="number" value="{{ weight.weight }}" /></td></tr>
+</table>
+<p>With probability proportional to the weight shown above, files from list 1 below will be compared to list 2 below.</p>
+<table>
+<tr><td><label for="file-list1">File list 1 (<span id="nfiles1">{{ weight.get_length(1) }}</span> files)</label></td>
+<td><label for="file-list2">File list 2 (<span id="nfiles2">{{ weight.get_length(2) }}</span> files)</label></td></tr>
+<tr><td><textarea rows="20" cols="80" id="file-list1">{{ weight.get_list(1) }}</textarea>
+</td><td><textarea rows="20" cols="80" id="file-list2">{{ weight.get_list(2)}}</textarea>
+</td></tr>
+<tr><td>Filter <input type="text" class="name-input" value="" id="filter1"> <button id="apply-filter1">Apply</button>
+<button id="revert1">Revert to full list</button></td>
+<td>Filter <input type="text" class="name-input" value="" id="filter2"> <button id="apply-filter2">Apply</button>
+<button id="revert2">Revert to full list</button></td></tr>
+</table>
+<div class="panel"><button id="submit">Submit</button>
+<button id="reset">Reset</button>
+<button id="cancel">Cancel</button>
+{% if not new %}<button id="delete">Delete</button>{% endif %}
+</div>
+{% endblock %}
+{% block scripts %}
+
+<script src="/pairwise/static/pwv_weight.js"></script>{% endblock %}

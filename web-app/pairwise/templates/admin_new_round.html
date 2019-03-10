@@ -1,0 +1,47 @@
+{% extends "admin_base.html" %}
+{% block title %}Pairwise Video Comparisons: admin application{% endblock %}
+{% block content %}
+<h1>Pairwise Video Comparisons: add new round</h1>
+<h2>Round information</h2>
+<table>
+<tr><td>Round name</td><td><input type="text" id="round_name"></td><td></td></tr>
+<tr><td>Open</td><td><span id="roundOpened">No</span></td><td><button id="changeOpened">Change</button></td></tr>
+</table>
+<p class="hint">Before you start making comparisons you need to (1) upload a file list; 
+(2) choose one of the file lists below to associate it with this round; and
+(3) open the round by clicking <strong>Change</strong> above.</p>
+<h2>Users associated with this round</h2>
+<table id="users">
+<tr><th><input type="checkbox" id="selectAllUsers"></th><th>Name</th>
+<th>Email</th>
+<th>Comparisons</th>
+</tr>
+{% for u in users %}
+<tr><td>
+<input class="user_checkbox" type="checkbox" id={{ u.key.id() }}>
+</td><td>{{ u.name or u.nickname }}</td>
+<td>{{ u.email }}</td>
+<td>{{ u.count_comparisons() }}</td>
+</tr>
+{% endfor %}
+</table>
+<h2>Choose a file list to associate with the round</h2>
+<form id="filelists">
+<input type="radio" name="filelist" value="none" id="filelist_none" checked>
+<label for="filelist_none"> None selected</label><br />
+{% for file_list in file_lists %}
+<input type="radio"
+	name="filelist"
+	value="{{ file_list.key.id() }}"
+	id="filelist_{{ file_list.key.id() }}"
+	>
+<label for="filelist_{{ file_list.key.id() }}">{{ file_list.name }} ({{ file_list.content_preview() }})</label><br />
+{% endfor %}
+</form>
+<div id="panel"><button id="submit">Create new round</button>
+<a href="/pairwise">Cancel</a>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<script src="/pairwise/static/pwv_new_round.js"></script>{% endblock %}

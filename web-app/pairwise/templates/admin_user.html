@@ -1,0 +1,44 @@
+{% extends "admin_base.html" %}
+{% block title %}Pairwise Video Comparisons: admin application{% endblock %}
+{% block content %}
+<p><a href="/pairwise">&lt; Return to admin home screen</a></p>
+<h1>Pairwise Video Comparisons: user {{ account.name or account.nickname }}</h1>
+<h2>User information</h2>
+<table id="userInformation">
+<tr><td>Name</td><td><span id="accountName">{{ account.name }}</span></td><td><button id="editName">Edit</button></td></tr>
+<tr><td>Name from email account</td><td>{{ account.nickname }}</td><td><span class="note">This is added when the user signs in</span></td></tr>
+<tr><td>Email address</td><td><span id="accountEmail">{{ account.email }}</span></td><td><button id="editEmail">Edit</button></td></tr>
+<tr><td>Admin</td><td><span id="adminStatus">{% if account.admin %}Yes{% else %}No{% endif %}</span></td><td><button id="changeAdmin">Change</button></td></tr>
+</table>
+<div id="rounds"></div>
+<div id="panel"><button id="submit">Save changes</button> <a href="/pairwise">Cancel</a> <button id="deleteUser">Delete user</button>
+</div>
+{% if comparisons %}
+<h2>Comparisons by {{ account.name or account.nickname }}</h2>
+{% if comparisons.count() %}
+<table id="comparisons">
+<th>Round</th>
+<th>Left</th>
+<th>Right</th>
+<th>Result</th>
+<th>Shown time</th>
+<th>Choice time</th>
+</tr>
+{% for comparison in comparisons %}
+<tr>
+<td>{{ comparison.get_round_name() }}</td>
+<td>{{ comparison.left }}</td>
+<td>{{ comparison.right }}</td>
+<td>{{ comparison.result }}</td>
+<td>{{ comparison.created }}</td>
+<td>{{ comparison.completed }}</td>
+</tr>
+{% endfor %}
+</table>
+{% else %}
+No comparisons yet
+{% endif %}
+<div id="comparisons_panel"></div>
+{% endif %}
+{% endblock %}
+{% block scripts %}<script src="/pairwise/static/pwv_user.js"></script>{% endblock %}
