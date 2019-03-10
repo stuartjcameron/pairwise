@@ -71,7 +71,9 @@ parameters determining the likelihood of two files being viewed together,
 create comparison sessions, and add or remove users from sessions. It also
 allows users to upload lists of file names using the uploader desktop tool (see above).
 
-Google App Engine (a Google Cloud service). In the root
+The app runs on Google App Engine (a Google Cloud service) and can currently be found
+at http://www.education-metrics.appspot.com/pwva (accessible only to users signed in
+as admins. It requires a google username and password). In the root
 directory, app.yaml, appengine_config.py and index.yaml are all standard GAE
 files. app.yaml tells it where to route each URL.
 
