@@ -29,8 +29,8 @@
 {% else %}
 No comparisons yet
 {% endif %}
-<div id="comparisons_panel" class="panel"><a href="/pwva/test_comp">Add test comparison</a>
-<a href="/pwva/all_comparisons_csv">Download as CSV</a>
+<div id="comparisons_panel" class="panel"><a href="/pairwise/test_comp">Add test comparison</a>
+<a href="/pairwise/all_comparisons_csv">Download as CSV</a>
 {% if test_count %}
 <button id="remove_test_comps">Remove test comparisons</button>
 {% endif %}
@@ -48,7 +48,7 @@ No comparisons yet
 </tr>
 {% for r in rounds %}
 <tr>
-<td><a href="pwva/round/{{ r.key.id() }}">{{ r.name }}</a></td>
+<td><a href="pairwise/round/{{ r.key.id() }}">{{ r.name }}</a></td>
 <td>{{ r.created }}</td>
 <td>{{ r.count_comparisons() }}</td>
 <td>{{ r.judges|length }}</td>
@@ -59,7 +59,7 @@ No comparisons yet
 {% else %}
 No rounds yet
 {% endif %}
-<div id="rounds_panel" class="panel"><a href="/pwva/new_round">Add round</a>
+<div id="rounds_panel" class="panel"><a href="/pairwise/new_round">Add round</a>
 </div>
 
 <h2>Users</h2>
@@ -69,13 +69,13 @@ No rounds yet
 <th>Comparisons</th>
 </tr>
 {% for u in users %}
-<tr><td><a href="pwva/user/{{ u.key.id() }}">{{ u.name or u.nickname }}</a></td>
+<tr><td><a href="pairwise/user/{{ u.key.id() }}">{{ u.name or u.nickname }}</a></td>
 <td>{{ u.email }}</td>
 <td>{{ u.count_comparisons() }}</td>
 </tr>
 {% endfor %}
 </table>
-<div id="users_panel" class="panel"><a href="/pwva/new_user">Add user</a></div>
+<div id="users_panel" class="panel"><a href="/pairwise/new_user">Add user</a></div>
 
 
 
@@ -83,4 +83,4 @@ No rounds yet
 {% endblock %}
 {% block scripts %}
 
-<script src="pwv/pwv_home.js"></script>{% endblock %}
+<script src="pairwise/static/pwv_home.js"></script>{% endblock %}

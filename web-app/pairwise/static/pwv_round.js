@@ -1,5 +1,5 @@
 /*
-script for pwva/round 
+script for pairwise/round 
 */
 
 console.log('starting pwv_round.js');
@@ -20,7 +20,7 @@ if (E('filelists')) {
 
 function addWeighting() {
 //--- redirect to add weighting page (need to save settings first..)	
-	window.location.href = '/pwva/new_weight?round=' + fromServer.roundId;
+	window.location.href = '/pairwise/new_weight?round=' + fromServer.roundId;
 }
 
 function getRoundInfoById(id) {
@@ -61,13 +61,13 @@ function deleteRound() {
 	
 }
 function reallyDeleteRound() {
-	get('/pwva/delete_round/' + fromServer.roundId).then(roundDeleted, standardFail);
+	get('/pairwise/delete_round/' + fromServer.roundId).then(roundDeleted, standardFail);
 	
 	// TODO: allow an undo (round and the comparisons in it are marked for deletion but not actually removed until later)
 }
 
 function roundDeleted() {
-	redirectWithMessage('/pwva', "Round <strong>" + fromServer.round.name + "</strong> was deleted");
+	redirectWithMessage('/pairwise', "Round <strong>" + fromServer.round.name + "</strong> was deleted");
 }
 	
 
@@ -192,7 +192,7 @@ function submit() {
 	}
 		
 	console.log('data to submit', dataToSubmit);
-	post('/pwva/edit_round/' + fromServer.roundId, dataToSubmit)
+	post('/pairwise/edit_round/' + fromServer.roundId, dataToSubmit)
 			.then(succeeded, standardFail);
 }
 function sameLists(a, b) {

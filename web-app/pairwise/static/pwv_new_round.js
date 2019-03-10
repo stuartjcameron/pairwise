@@ -72,7 +72,7 @@ function submitRound() {
 	};
 	if (validateData(roundData)) {
 		console.log('submitted new round', roundData);
-		post("/pwva/add_round", roundData).then(succeeded, standardFail)
+		post("/pairwise/add_round", roundData).then(succeeded, standardFail)
 	}
 	
 }
@@ -96,6 +96,6 @@ function validateData(data) {
 
 function succeeded(data) {
 	console.log('success', data);
-	redirectWithMessage('/pwva', "A new round <strong>" + data.parameters.name + "</strong> was successfully created.");
+	redirectWithMessage('/pairwise', "A new round <strong>" + data.parameters.name + "</strong> was successfully created.");
 }
 

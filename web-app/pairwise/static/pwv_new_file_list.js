@@ -17,7 +17,7 @@ function submit() {
 	}
 	console.log('file list:', content);
 	dataToSubmit.file_list = content;
-	post('/pwva/add_file_list2', dataToSubmit).then(succeeded, standardFail);
+	post('/pairwise/add_file_list2', dataToSubmit).then(succeeded, standardFail);
 }
 
 function succeeded(data) {

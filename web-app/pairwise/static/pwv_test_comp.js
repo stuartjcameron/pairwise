@@ -39,5 +39,5 @@ function showCompleted(request) {
 	append('#result', [
 		"<br />The test case was completed with result ", 
 		{'strong': request.response.choice == 1 ? "left" : "right"}, 
-		"<br />Go back to the ", {a: "home screen", href: "/pwva"}, " to view the table of comparisons.<br /><br />"]);
+		"<br />Go back to the ", {a: "home screen", href: "/pairwise"}, " to view the table of comparisons.<br /><br />"]);
 }

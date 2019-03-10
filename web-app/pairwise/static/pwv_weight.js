@@ -1,11 +1,11 @@
 /*
-script for pwva/new_weight and pwva_weight
+script for pairwise/new_weight and pairwise_weight
 */
 
 console.log('starting pwv_weight.js');
 
 var fileLists = {1: fromServer.weight.left.slice(), 2: fromServer.weight.right.slice()},
-	roundPage = '/pwva/round/' + fromServer.round.id;
+	roundPage = '/pairwise/round/' + fromServer.round.id;
 
 click('#submit').then(submit);
 click('#cancel').then(cancel);
@@ -25,18 +25,18 @@ function revert(data) {
 	fileLists[data.side] = fromServer.fileList;
 	E('filter1').value = '';
 	E('filter2').value = '';
-	update();	
+	update();
 }
 
 function submit() {
 	console.log('submit');
-	getFileList({side: 1});	
+	getFileList({side: 1});
 	getFileList({side: 2});
-	post('/pwva/edit_weight', {
+	post('/pairwise/edit_weight', {
 		weightId: fromServer.id,
 		roundId: fromServer.round.id,
-		left: fileLists[1], 
-		right: fileLists[2], 
+		left: fileLists[1],
+		right: fileLists[2],
 		weight: E('weightWeight').value,
 		name: E('weightName').value
 	}).then(succeeded, standardFail);
@@ -84,7 +84,7 @@ function cancel() {
 	console.log('cancel');
 	if (fromServer.newWeight) {
 		//--- If the weight is new, then cancel also deletes it
-		get('/pwva/delete_weight', {round: fromServer.round.id, weight: fromServer.id}).then(goBack, standardFail);
+		get('/pairwise/delete_weight', {round: fromServer.round.id, weight: fromServer.id}).then(goBack, standardFail);
 	} else {
 		//--- If the weight is not new, simply return to the round page without saving anything
 		goBack();
@@ -98,11 +98,11 @@ function goBack() {
 function deleteWeight() {
 	//--- Delete weight button only appears if the weight is not new
 	console.log('delete');
-	showMessage("Are you sure you want to delete this weighting? Comparisons using it will not be deleted.", 
+	showMessage("Are you sure you want to delete this weighting? Comparisons using it will not be deleted.",
 		{"Really delete": reallyDelete, "Cancel": hideMessage});
 }
 function reallyDelete() {
-	get('/pwva/delete_weight', {round: fromServer.round.id, weight: fromServer.id}).then(weightDeleted, standardFail);
+	get('/pairwise/delete_weight', {round: fromServer.round.id, weight: fromServer.id}).then(weightDeleted, standardFail);
 }
 function weightDeleted() {
 	redirectWithMessage(roundPage, "Weighting <strong>" + fromServer.weight.name + "</strong> was deleted");
@@ -114,7 +114,7 @@ function applyFilter(data) {
 	console.log('apply filter', data, filter);
 	regex = globStringToRegex(filter);
 	fileLists[side] = fileLists[side].filter(function(s) { return s.match(regex)});
-	update();	
+	update();
 }
 
 // Regex functions from https://stackoverflow.com/a/13818704/567595

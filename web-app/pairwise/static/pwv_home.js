@@ -7,15 +7,15 @@ addTodaysWorkLink();
 
 
 if (E('comparisonsControl')) {
-	tableControl('#comparisonsControl', makeComparisonsTable, 'pwva/get_comparisons', fromServer.comparisonsCount);
+	tableControl('#comparisonsControl', makeComparisonsTable, 'pairwise/get_comparisons', fromServer.comparisonsCount);
 }
 
 function removeTestComps() {
-	get("/pwva/remove_test_comps").then(succeeded, standardFail)
+	get("/pairwise/remove_test_comps").then(succeeded, standardFail)
 }
 function succeeded(data) {
 	console.log('succeeded in removing test comps', data);
-	redirectWithMessage("/pwva", "Test comparisons have been deleted from the database.");
+	redirectWithMessage("/pairwise", "Test comparisons have been deleted from the database.");
 }
 function makeComparisonsTable(comparisons) {
 	var table = E('comparisons'), html, i, c;
@@ -35,7 +35,7 @@ function addTodaysWorkLink() {
 	//--- Add a link to the page showing today's work (depends on local timezone)
 	var offset = new Date().getTimezoneOffset() / 60,
 		query = toQuery({timezone: offset});
-	append('#comparisons_panel', {tag: 'a', href: '/pwva/todayswork?' + query, c: "Show today's work"});	
+	append('#comparisons_panel', {tag: 'a', href: '/pairwise/todayswork?' + query, c: "Show today's work"});	
 }
 
 

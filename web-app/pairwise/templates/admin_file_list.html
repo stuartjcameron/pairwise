@@ -1,7 +1,7 @@
 {% extends "admin_base.html" %}
 {% block title %}Pairwise Video Comparisons: admin application{% endblock %}
 {% block content %}
-<p><a href="/pwva">&lt; Return to admin home screen</a></p>
+<p><a href="/pairwise">&lt; Return to admin home screen</a></p>
 <h1>Pairwise Video Comparisons: file list</h1>
 <table><tr><td>Name</td><td><span id="filelistName">{{ file_list.name }}</span></td></tr>
 <tr><td>Created</td><td>{{ file_list.created }}</td></tr>
@@ -26,4 +26,4 @@ None
 {% endif %}
 
 {% endblock %}
-{% block scripts %}<script src="/pwv/pwv_file_list.js"></script>{% endblock %}
+{% block scripts %}<script src="/pairwise/static/pwv_file_list.js"></script>{% endblock %}

@@ -1,7 +1,7 @@
 {% extends "admin_base.html" %}
 {% block title %}Pairwise Comparisons: admin application{% endblock %}
 {% block content %}
-<p><a href="/pwva">&lt; Return to admin home screen</a></p>
+<p><a href="/pairwise">&lt; Return to admin home screen</a></p>
 <h1>Pairwise Comparisons: {{ round_.name }}</h1>
 <p>Created {{ round_.created }} by {{ creator.name or creator.nickname }}</p>
 
@@ -29,14 +29,14 @@
 	<tr><td>
 	{% if u.in_round(round_) %}
 		<input type="checkbox" checked id="{{ u.key.id() }}">
-	{% else %} <!-- if u.in_round(round_) -->
+	{% else %} 
 		<input type="checkbox" id="{{ u.key.id() }}">
-	{% endif %} <!-- if u.in_round(round_) -->
+	{% endif %} 
 	</td><td>{{ u.name or u.nickname }}</td>
 	<td>{{ u.email }}</td>
 	<td>{{ u.count_comparisons() }}</td>
 	</tr>
-{% endfor %} <!-- {% for u in users %} -->
+{% endfor %} 
 </table>
 
 <h2>Files for comparison in this round</h2>
@@ -53,15 +53,11 @@ File type &nbsp;&nbsp;
 <label for="other_filetype">Other</label>
 </form>
 <div>
-<label for="contentInput">File list (separate files with new line)</label>
-<br /><textarea rows="20" cols="100" id="contentInput" {% if comparisons|length %} disabled {% endif %} >
-{% if file_list %}
-	{% for f in file_list.content %}
-		{{ f }}
-	{% endfor %}
-{% endif %}
-</textarea>
+<label for="contentInput">File list {% if not comparisons %}(separate files with new line){% endif %}</label>
+<br /><textarea rows="20" cols="100" id="contentInput"
+{% if comparisons|length %} disabled {% endif %}>{% if file_list %}{{ file_list.content_rows() }}{% endif %}</textarea>
 </div>
+{% if not comparisons %}
 <div>
 <label for="existingRounds">Copy a file list from another round</label>
 <select id="existingRounds">
@@ -73,14 +69,24 @@ File type &nbsp;&nbsp;
 {% endfor %}
 </select>
 </div>
-
+{% endif %}
 <div class="panel">
-<button id="submit">Save changes</button> <a href="/pwva">Cancel</a> <button id="deleteRound">Delete round</button></div>
+<button id="submit">Save changes</button> <a href="/pairwise">Cancel</a> <button id="deleteRound">Delete round</button></div>
 
 <h2>Weighting scheme</h2>
+{% if weights and weights.count() %}
+<table><tr><th>Name</th><th>File numbers</th><th>Weight</th></tr>
+{% for weight in weights %}
+<tr><td><a href="/pairwise/weight?round={{ round_id }}&weight={{ weight.key.id() }}">{{ weight.name }}</a></td><td>{{ weight.left|length }} vs. {{ weight.right|length }}</td>
+<td>{{ weight.weight }}</td></tr>
+{% endfor %}
+</table>
+
+{% else %}
 <p>There is currently no weighting scheme associated with this round. 
 All files will have equal probability of selection.</p> 
-<div class="panel"><a href="/pwva/add_weighting">New weighting scheme</a></div>
+{% endif %}
+<div class="panel"><button id="add-weighting">New weighting scheme</button></div>
 
 
 
@@ -105,10 +111,11 @@ All files will have equal probability of selection.</p>
 		</tr>
 	{% endfor %}
 	</table>
-	<div class="panel"><a href="/pwva/comparisons_csv?round={{ round_.key.id() }}">Download as CSV</a></div>
+	<div class="panel"><a href="/pairwise/comparisons_csv?round={{ round_.key.id() }}">Download as CSV</a></div>
 {% else %}
 	No comparisons yet
 {% endif %}
 
+
 {% endblock %}
-{% block scripts %}<script src="/pwv/pwv_round.js"></script>{% endblock %}
+{% block scripts %}<script src="/pairwise/static/pwv_round.js"></script>{% endblock %}

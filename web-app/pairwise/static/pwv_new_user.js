@@ -33,7 +33,7 @@ function submitUser() {
 	};
 	if (validateData(userData)) {
 		console.log('submitted new user', userData);
-		post("/pwva/add_user", userData).then(succeeded, standardFail)
+		post("/pairwise/add_user", userData).then(succeeded, standardFail)
 	}	
 }
 
@@ -59,7 +59,7 @@ function validateData(data) {
 
 function succeeded(data) {
 	console.log('success', data);
-	redirectWithMessage('/pwva', "A new user <strong>" + data.parameters.name + "</strong> was successfully created.");
+	redirectWithMessage('/pairwise', "A new user <strong>" + data.parameters.name + "</strong> was successfully created.");
 }
 
 

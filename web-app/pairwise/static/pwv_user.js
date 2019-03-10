@@ -18,11 +18,11 @@ function deleteUser() {
 }
 
 function reallyDeleteUser() {
-	get('/pwva/delete_user/' + fromServer.accountId).then(userDeleted, standardFail);
+	get('/pairwise/delete_user/' + fromServer.accountId).then(userDeleted, standardFail);
 }
 
 function userDeleted() {
-	redirectWithMessage('/pwva', "User was deleted");
+	redirectWithMessage('/pairwise', "User was deleted");
 }
 
 function makeTableAndDropdown() {
@@ -214,7 +214,7 @@ function submit() {
 		dataToSubmit.admin = adminStatus;
 	}
 	if (dataToSubmit.name || dataToSubmit.email || dataToSubmit.rounds || (dataToSubmit.admin !== undefined)) {
-		post('/pwva/edit_user/' + fromServer.accountId, dataToSubmit).then(succeeded, standardFail);
+		post('/pairwise/edit_user/' + fromServer.accountId, dataToSubmit).then(succeeded, standardFail);
 	}
 	else {
 		showMessage("You have not actually changed anything.");
