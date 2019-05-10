@@ -65,6 +65,9 @@ class NotLoggedInError(Exception):
 class NoPermissionError(Exception):
     pass
 
+class BadWeightsError(Exception):
+    pass
+
 class SessionStartError(Exception):
     pass
 
@@ -180,7 +183,6 @@ class PwvComparison(ndb.Model):
 
     @classmethod
     def count_by_judge_id(cls, judge_id):
-        #TODO: filter by judge
         return cls.query().filter(cls.judge == judge_id).count()
 
     @classmethod
@@ -532,17 +534,6 @@ def make_admin():
 # ADMIN PAGES
 #####################################################################
 
-
-@admin('/pairwise/get_comparisons')
-def get_comparisons():
-    page = request.args.get('page', type=int, default=1)
-    comparisons = [c.formatted_dict() for c in PwvComparison.all(page=page)]
-    comparisons_count = PwvComparison.query().count()
-    return jsonify({'model': 'PwvComparison',
-                    'entities': comparisons,
-                    'count': comparisons_count})
-
-
 @admin('/pairwise')
 def home():
     user = UserAccount.current
@@ -668,37 +659,6 @@ def weight_page():
                                       'newWeight': False})
 
 
-
-@admin('/pairwise/edit_weight', methods=['POST'])
-def edit_weight():
-    edits = request.get_json()
-    weight_id = edits['weightId']
-    round_id = edits['roundId']
-    weight_key = ndb.Key(PwvRound, round_id, Weighting, weight_id)
-    weight = weight_key.get()
-    logging.info("""edit weight:
----weight_id=%s
----weight=%s
----edits=%s""", weight_id, weight, edits)
-    if 'weight' in edits:
-        weight.weight = float(edits['weight'])
-    for attr in ['name', 'left', 'right']:
-        if attr in edits:
-            setattr(weight, attr, edits[attr])
-    weight.count_duplicates()
-    key = weight.put()
-    return jsonify({'editedWeightId': weight_id, 'weight': weight.to_dict()})
-
-
-@admin('/pairwise/delete_weight')
-def delete_weight():
-    round_id = request.args.get('round', type=int)
-    weight_id = request.args.get('weight', type=int)
-    key = ndb.Key(PwvRound, round_id, Weighting, weight_id)
-    key.delete()
-    return jsonify({'deletedWeightId': weight_id, 'roundId': round_id})
-
-
 @admin('/pairwise/round/<int:round_id>')
 def round_page(round_id):
     """ PWV admin round page """
@@ -736,6 +696,7 @@ def round_page(round_id):
                            to_client = {'roundsInfo': rounds_info, 'round': round_.to_dict(),
                                         'roundId': round_id, 'fileList': file_list_content})
 
+
 @admin('/pairwise/file_list/<int:file_list_id>')
 def file_list_page(file_list_id):
     """ PWV admin file list page """
@@ -745,6 +706,7 @@ def file_list_page(file_list_id):
                            rounds=list(rounds),
                            change_user=change_user_link(),
                            file_list=file_list, to_client={'id': file_list_id})
+
 
 @admin('/pairwise/new_round')
 def new_round_page():
@@ -853,7 +815,50 @@ def new_file_list_page():
 #####################################################################
 # ADMIN FUNCTIONS RETURNING JSON
 #####################################################################
+@admin('/pairwise/edit_weight', methods=['POST'])
+def edit_weight():
+    edits = request.get_json()
+    weight_id = edits['weightId']
+    round_id = edits['roundId']
+    weight_key = ndb.Key(PwvRound, round_id, Weighting, weight_id)
+    weight = weight_key.get()
+    logging.info("""edit weight:
+---weight_id=%s
+---weight=%s
+---edits=%s""", weight_id, weight, edits)
+    if 'weight' in edits:
+        weight.weight = float(edits['weight'])
+    
+    # Check whether any files listed are in the round's file list
+    files = edits.get("left", []) + edits.get("right", [])
+    if not set(files).issubset(PwvRound.get_by_id(round_id).get_file_list()):
+        raise BadWeightsError("Cannot set weights because the files are not all in the round's file list.")
+    
+    for attr in ['name', 'left', 'right']:
+        if attr in edits:
+            setattr(weight, attr, edits[attr])
+    weight.count_duplicates()
+    key = weight.put()
+    return jsonify({'editedWeightId': weight_id, 'weight': weight.to_dict()})
 
+
+@admin('/pairwise/delete_weight')
+def delete_weight():
+    round_id = request.args.get('round', type=int)
+    weight_id = request.args.get('weight', type=int)
+    key = ndb.Key(PwvRound, round_id, Weighting, weight_id)
+    key.delete()
+    return jsonify({'deletedWeightId': weight_id, 'roundId': round_id})
+
+@admin('/pairwise/get_comparisons')
+def get_comparisons():
+    page = request.args.get('page', type=int, default=1)
+    comparisons = [c.formatted_dict() for c in PwvComparison.all(page=page)]
+    comparisons_count = PwvComparison.query().count()
+    return jsonify({'model': 'PwvComparison',
+                    'entities': comparisons,
+                    'count': comparisons_count})
+        
 @admin('/pairwise/remove_test_comps')
 def remove_test_comps():
     PwvComparison.delete_tests()
@@ -1043,7 +1048,6 @@ def add_fake_file_list(name):
         content=["1", "2", "3", "4", "5"])
     key = file_list.put()
     return jsonify({'fileListId': key.id()})
-
 
 
 def add_file_list(content, file_type=None, name=None):
@@ -1239,12 +1243,19 @@ def random_weighted_selection(weights):
         if rand < prob:
             return i
         rand -= prob
-
+        
 def select_files_weighted(round_, user, weights):
     logging.info("""Selecting files with weights
     round_id=%s,
     weights=%s""", round_.key.id(), [weight.key.id() for weight in weights])
     file_list = round_.get_file_list()
+    
+    # Due to bug, it is possible that the weight file lists may contain
+    # files not in the main file list for the round. Fail graciously if so
+    if not (set(weights.left).issubset(file_list) 
+            and set(weights.right).issubset(file_list)):
+        raise BadWeightsError("The weighted file lists contain files not in the main file list")
+    
     number_of_files = len(file_list.content)
     # 1. Find out which files and pairs will be excluded for this user
     excl_file_indices, excl_pairs = get_exclusions(round_, user)

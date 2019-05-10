@@ -29,18 +29,31 @@ function revert(data) {
 }
 
 function submit() {
+	var left_ok, right_ok;
 	console.log('submit');
 	getFileList({side: 1});
 	getFileList({side: 2});
-	post('/pairwise/edit_weight', {
-		weightId: fromServer.id,
-		roundId: fromServer.round.id,
-		left: fileLists[1],
-		right: fileLists[2],
-		weight: E('weightWeight').value,
-		name: E('weightName').value
-	}).then(succeeded, standardFail);
+	left_ok = checkFileList(1);
+	right_ok = checkFileList(2);
+	if (!left_ok && !right_ok) {
+    	showMessage("Neither file list is valid. Please edit both.")
+    } else if (!left_ok) {
+        showMessage("The left file list is not valid. Please edit and try again.")
+    } else if (!right_ok) {
+        showMessage("The right file list is not valid. Please edit and try again.")
+    } else {
+        post('/pairwise/edit_weight', {
+    		weightId: fromServer.id,
+    		roundId: fromServer.round.id,
+    		left: fileLists[1],
+    		right: fileLists[2],
+    		weight: E('weightWeight').value,
+    		name: E('weightName').value
+    	}).then(succeeded, standardFail);
+    }
 }
+	
+	
 function getFileList(data) {
 	//--- Read file lists from textareas in case they have changed manually
 	var i, content;
@@ -51,6 +64,17 @@ function getFileList(data) {
 	}
 	fileLists[data.side] = content;
 	updateLengths();
+}
+
+function checkFileList(side) {
+    //--- Check whether files in given file list are all in server.fileList
+    var i;
+    for (i = 0; i < fileLists[side].length; i++) {
+        if (server.fileList.indexOf(fileLists[side][i]) == -1) {
+            return false;
+        }
+    }
+    return true;
 }
 
 function succeeded(data) {
@@ -75,6 +99,7 @@ function update() {
 	E('file-list2').value = fileLists[2].join('\n');
 	updateLengths();
 }
+
 function updateLengths() {
 	set('#nfiles1', fileLists[1].length);
 	set('#nfiles2', fileLists[2].length);
@@ -101,9 +126,11 @@ function deleteWeight() {
 	showMessage("Are you sure you want to delete this weighting? Comparisons using it will not be deleted.",
 		{"Really delete": reallyDelete, "Cancel": hideMessage});
 }
+
 function reallyDelete() {
 	get('/pairwise/delete_weight', {round: fromServer.round.id, weight: fromServer.id}).then(weightDeleted, standardFail);
 }
+
 function weightDeleted() {
 	redirectWithMessage(roundPage, "Weighting <strong>" + fromServer.weight.name + "</strong> was deleted");
 }
