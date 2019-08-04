@@ -89,6 +89,6 @@ are all based on.
 
 The webpages rely on a series of JS files stored in **web-app/pairwise/static/**.
 These are written in vanilla JS with a simple library of commands stored in
-**web-app/static/library.jss**
+**web-app/static/library.js**
 
 There is a single stylesheet for the entire app - **web-app/style.css**.
